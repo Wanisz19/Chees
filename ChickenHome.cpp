@@ -5,11 +5,13 @@
 #include <iostream>
 #include <time.h>
 #include <windows.h>
+#include <SFML/Graphics.hpp>
 
 
 ChickenHome::ChickenHome()
 {
-
+speed=0.9;
+statt==RUNNING;
 for(int i=0; i<8; i++)
 
     {   tabEgg[i].haslife=0;
@@ -18,12 +20,15 @@ for(int i=0; i<8; i++)
         tabEgg[i].eggY=0;
     }
 
-
+    tabWolf.wolfX=5;
+    tabWolf.wolfY=0;
 
     eggs=0;
     score=0;
-    CanMove=2;
 
+
+
+Refresh();
 
 }
 
@@ -44,6 +49,7 @@ void ChickenHome::Refresh()
 
     }
 
+        tab[tabWolf.wolfX][tabWolf.wolfY].wolf_alive=1;
 
     for(int i=0; i<8; i++)
     {
@@ -117,24 +123,70 @@ int ChickenHome::CheckNumberOfeggs()
 void ChickenHome::BorningEggs()
 {
 
-     if(score<=5) // >>>>>>>>
-        {
+
         tabEgg[0].existing=1;
-        }
+
         if(score>5 && score<=10) // >>>>>>>>
         {
+        speed=0.7;
+        tabEgg[0].existing=1;
         tabEgg[1].existing=1;
         tabEgg[2].existing=1;
         }
-        if(score>10 && score<=15) // >>>>>>>>          /// DO WYREGULOWANIA XD
+        if(score>10 && score<=30)
         {
+        speed=0.6;
+        tabEgg[0].existing=1;
+        tabEgg[1].existing=1;
+        tabEgg[2].existing=1;
+        tabEgg[3].existing=1;
+
+        }
+
+         if(score>30 && score<=60)
+        {
+             speed=0.55;
+        tabEgg[0].existing=1;
+        tabEgg[1].existing=1;
+        tabEgg[2].existing=1;
+        tabEgg[3].existing=1;
+
+        }
+
+         if(score>60)
+        {
+        speed=0.49;
+        tabEgg[0].existing=1;
+        tabEgg[1].existing=1;
+        tabEgg[2].existing=1;
         tabEgg[3].existing=1;
         tabEgg[4].existing=1;
         }
 
-
-
 }
+
+int ChickenHome::isEggs()
+{
+    int numberEggs=0;
+    if(tab[0][0].egg_alive==1)
+    {
+        numberEggs++;
+    }
+    if(tab[0][1].egg_alive==1)
+    {
+        numberEggs++;
+    }
+    if(tab[11][0].egg_alive==1)
+    {
+        numberEggs++;
+    }
+    if(tab[11][1].egg_alive==1)
+    {
+        numberEggs++;
+    }
+    return numberEggs;
+}
+
 void ChickenHome::generatePosition()
 {
 
@@ -168,43 +220,56 @@ void ChickenHome::generatePosition()
                 posY=1;
             }
 
-    }
+
+
+
+
+
+
+
+                  for(int i=0; i<8; i++)
+                        {
+                                if(tabEgg[i].existing==1 )
+                                {
+
+
+
+
+                                        if(tabEgg[i].haslife!=1)
+                                        {
+
+
+
+
+                                                    tabEgg[i].eggX=posX;
+                                                    tabEgg[i].eggY=posY;
+                                                    tabEgg[i].haslife=1;
+
+                                                    break;
+
+                                        }
+
+
+                                 }
+
+
+                         }
+
+
+
+
+
+
+}
 
 
 
 void ChickenHome::Spawneggs()
 {
 
-    BorningEggs();
+BorningEggs();
 
-
-
-for(int i=0; i<8; i++)
-    {
-      //  if(CanMove%2==0)
-       // {
-        generatePosition();
-
-
-        if(tabEgg[i].existing==1 )
-        {
-            if(tabEgg[i].haslife!=1)
-            {
-
-            tabEgg[i].eggX=posX;
-            tabEgg[i].eggY=posY;
-            tabEgg[i].haslife=1;
-            }
-
-        }
-
-    }
-
-
-
-
-
-
+generatePosition();
 
 
 }
@@ -214,7 +279,7 @@ void ChickenHome::Pusheggs()
 
 for(int x=0; x<8; x++)
     {
-            if(tabEgg[x].existing==1)
+            if(tabEgg[x].existing==1 && tabEgg[x].haslife==1)
             {
 
         if(tabEgg[x].eggX<5)
@@ -229,7 +294,7 @@ for(int x=0; x<8; x++)
             }
 
             }
-            //CanMove+=1;
+
 
     }
 
@@ -244,8 +309,21 @@ void ChickenHome::CatchEgg()
 
         if(tab[idx][idy].egg_alive==1&&tab[idx][idy].wolf_alive==1)
         {
-            score+=1;
+            score++;
+
             tab[idx][idy].egg_alive=0;
+            maxPosition();
+            cout<<score;
+            /*
+            for(int i=0; i<8; i++)
+            {
+                if(tabEgg[i].eggX==idx && tabEgg[i].eggY==idy)
+                {
+                    tabEgg[i].haslife=0;
+                    cout<<score;
+                }
+            }
+            */
 
         }
 
@@ -267,19 +345,108 @@ bool ChickenHome::CollisionEggs()
         return 0;
 }
 
+int ChickenHome::stateOfField(int idx, int idy)
+{
+
+
+            if(tab[idx][idy].egg_alive==1&&tab[idx][idy].wolf_alive==0)
+            {
+            return 'E';
+            }
+             else if (tab[idx][idy].wolf_alive==1)
+            {
+            return 'W';
+
+            }
+           else  if(tab[idx][idy].wolf_alive==0 &&tab[idx][idy].wolf_alive==0)
+            {
+            return '_';
+            }
+
+
+
+
+
+}
+
+
+void ChickenHome::handleEvent(sf::Event &event)
+{
+      if (event.type == sf::Event::KeyPressed)
+{
+    if (event.key.code == sf::Keyboard::W)
+    {
+        if(tabWolf.wolfY==1 )
+        tabWolf.wolfY--;
+
+    }
+    if (event.key.code == sf::Keyboard::S)
+    {
+         if(tabWolf.wolfY==0 )
+        tabWolf.wolfY++;
+    }
+
+   if (event.key.code == sf::Keyboard::D)
+    {   if(tabWolf.wolfX==5 )
+        tabWolf.wolfX++;
+    }
+
+    if (event.key.code == sf::Keyboard::A)
+    {   if(tabWolf.wolfX==6)
+        tabWolf.wolfX--;
+    }
+}
+
+}
+int ChickenHome::Getscore()
+{
+    return score;
+}
 
 void ChickenHome::game()
 {
+times = clocks.getElapsedTime();
 
-    for(;;)
-    {
+
+
+    if (times.asSeconds() >= speed)
+        {
+    GameOver();
+    Refresh();
+    CatchEgg();
     Spawneggs();
     Refresh();
-    debug_display();
     Pusheggs();
-    Sleep(1000);
 
+    clocks.restart();
+        }
+}
+
+void ChickenHome::maxPosition()
+{
+    for(int i=0; i<8; i++)
+    {
+        if(tabEgg[i].eggX==5 || tabEgg[i].eggX==6)
+        {
+            tabEgg[i].haslife=0;
+            cout<<"Jupi";
+        }
     }
 }
+
+bool ChickenHome::GameOver()
+{
+
+    if((tab[5][0].egg_alive==1&&tab[5][0].wolf_alive==0)||(tab[5][1].egg_alive==1&&tab[5][1].wolf_alive==0)
+        ||(tab[6][0].egg_alive==1&&tab[6][0].wolf_alive==0)||(tab[6][1].egg_alive==1&&tab[6][1].wolf_alive==0))
+    {
+        statt=LOSE;
+        cout<<"lose";
+    }
+    return 0;
+}
+
+
+
 
 
