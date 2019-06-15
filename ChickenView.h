@@ -7,12 +7,18 @@
 class ChickenView
 {
 
-
+    string poi;
     ChickenHome & Chicken;
     int x0, y0;
     int size_of_field;
-    sf::Text text;
+    sf::Text txt;
+    sf::Text scor;
     sf::Font font;
+    sf::Texture texture;
+    sf::Texture texture2;
+    sf::Texture texture3;
+    sf::Texture texture4;
+    sf::Sprite sprite;
 
 public:
     ChickenView(int x0, int y0, int size_of_field, ChickenHome &ch);

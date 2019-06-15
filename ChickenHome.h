@@ -36,6 +36,8 @@ State tab[20][20];
 PositionEgg tabEgg[12];
 PositionWolf tabWolf;
 int score;
+int steps;
+int lifes;
 int eggs;
 int posX;
 int posY;
@@ -66,6 +68,7 @@ int Getscore();
 void maxPosition();
 void game();
 bool GameOver();
+int howManyLifes();
 
 
 

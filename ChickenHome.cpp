@@ -10,6 +10,8 @@
 
 ChickenHome::ChickenHome()
 {
+lifes=3;
+steps=0;
 speed=0.9;
 statt==RUNNING;
 for(int i=0; i<8; i++)
@@ -126,40 +128,26 @@ void ChickenHome::BorningEggs()
 
         tabEgg[0].existing=1;
 
-        if(score>5 && score<=10) // >>>>>>>>
+        if(steps>6) // >>>>>>>>
         {
+        speed=0.8;
+        tabEgg[0].existing=1;
+        tabEgg[1].existing=1;
+
+        }
+        if(steps>30)
+        {
+        tabEgg[2].existing=1;
+        }
         speed=0.7;
-        tabEgg[0].existing=1;
-        tabEgg[1].existing=1;
-        tabEgg[2].existing=1;
-        }
-        if(score>10 && score<=30)
+
+        if(steps>45)
         {
-        speed=0.6;
-        tabEgg[0].existing=1;
-        tabEgg[1].existing=1;
-        tabEgg[2].existing=1;
         tabEgg[3].existing=1;
-
         }
-
-         if(score>30 && score<=60)
+        if(steps>70)
         {
-             speed=0.55;
-        tabEgg[0].existing=1;
-        tabEgg[1].existing=1;
-        tabEgg[2].existing=1;
-        tabEgg[3].existing=1;
-
-        }
-
-         if(score>60)
-        {
-        speed=0.49;
-        tabEgg[0].existing=1;
-        tabEgg[1].existing=1;
-        tabEgg[2].existing=1;
-        tabEgg[3].existing=1;
+            speed=0.6;
         tabEgg[4].existing=1;
         }
 
@@ -276,6 +264,7 @@ generatePosition();
 
 void ChickenHome::Pusheggs()
 {
+    steps++;
 
 for(int x=0; x<8; x++)
     {
@@ -358,8 +347,11 @@ int ChickenHome::stateOfField(int idx, int idy)
             return 'W';
 
             }
+
            else  if(tab[idx][idy].wolf_alive==0 &&tab[idx][idy].wolf_alive==0)
             {
+
+
             return '_';
             }
 
@@ -413,8 +405,8 @@ times = clocks.getElapsedTime();
         {
     GameOver();
     Refresh();
-    CatchEgg();
     Spawneggs();
+    CatchEgg();
     Refresh();
     Pusheggs();
 
@@ -440,10 +432,21 @@ bool ChickenHome::GameOver()
     if((tab[5][0].egg_alive==1&&tab[5][0].wolf_alive==0)||(tab[5][1].egg_alive==1&&tab[5][1].wolf_alive==0)
         ||(tab[6][0].egg_alive==1&&tab[6][0].wolf_alive==0)||(tab[6][1].egg_alive==1&&tab[6][1].wolf_alive==0))
     {
+        lifes--;
+
+
+        if(lifes<0)
+        {
         statt=LOSE;
         cout<<"lose";
+        }
     }
     return 0;
+}
+
+int ChickenHome::howManyLifes()
+{
+    return lifes;
 }
 
 
