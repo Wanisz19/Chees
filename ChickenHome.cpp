@@ -298,21 +298,13 @@ void ChickenHome::CatchEgg()
 
         if(tab[idx][idy].egg_alive==1&&tab[idx][idy].wolf_alive==1)
         {
+            if(lifes>1)
+            {
             score++;
 
             tab[idx][idy].egg_alive=0;
             maxPosition();
-            cout<<score;
-            /*
-            for(int i=0; i<8; i++)
-            {
-                if(tabEgg[i].eggX==idx && tabEgg[i].eggY==idy)
-                {
-                    tabEgg[i].haslife=0;
-                    cout<<score;
-                }
             }
-            */
 
         }
 

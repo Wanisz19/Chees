@@ -21,6 +21,7 @@ if (!texture.loadFromFile("jajkox80.jpg")){}
 if (!texture2.loadFromFile("BoxX80.jpg")){}
 if (!texture3.loadFromFile("BlackBoxX80.jpg")){}
 if (!texture4.loadFromFile("Heart.jpg")){}
+if (!texture5.loadFromFile("wsad.png")){}
 
 
 }
@@ -98,6 +99,10 @@ sf::Sprite sprite(texture2);
 
 }
 
+sf::Sprite sprite(texture5);
+  sprite.setPosition(200,616);
+      win.draw(sprite);
+
 
  win.draw(scor);
  win.draw(txt);
@@ -114,6 +119,19 @@ sf::Sprite sprite(texture4);
 
 
 }
+if(Chicken.howManyLifes()<0)
+{
+sf::RectangleShape rectangle(sf::Vector2f(1000.f, 1000.f)); // nie można wywołać fukcji getboardsize
+
+txt.setPosition(670, 200);
+scor.setPosition(280, 200);
+                rectangle.setFillColor(sf::Color(0, 0, 0));
+                rectangle.setPosition(0,0);
+                win.draw(rectangle);
+                 win.draw(scor);
+                 win.draw(txt);
+}
+
 
 
 }

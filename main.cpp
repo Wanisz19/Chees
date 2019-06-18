@@ -12,6 +12,8 @@ int main()
 {
     srand(time(NULL));
 
+
+
     ChickenHome chicken;
     ChickenView view(10,30,80,chicken);
 
